@@ -1,52 +1,62 @@
 package it.edu.iisvolta;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
 
 	public static void main(String[] args) {
-////*****************************scrittura sul file***************************
-		try {
-			FileWriter fw=new FileWriter("prodotti.csv");	//crea un file di nome prodotti.txt
-			fw.write("Pane;3.50;20\n");
-			fw.write("Pasta;1.60;45\n");
-			fw.write("Biscotti;4.70;80\n");
-			fw.write("Salame;35;37\n");
-			fw.close();
-			System.out.println("File correttamente creato");
-		} catch (IOException e) {
-			System.out.println("Si è verificato un errore in fase di creazione file!");
-			e.printStackTrace();
-		}
-	
-//////////////////LETTURA DA UN FILE//////////////////////////////
- 
-	
-		File f=new File("prodotti.csv");
+		Scanner sc=new Scanner(System.in);
+		String risp;
+		Negozio n=new Negozio();
 		
-		String[]dati;
-		try {
-			String riga;
-			Scanner sc=new Scanner(f);
-			while(sc.hasNextLine()) {/////vero quando c'è, falso quando finisce. vuol dire ripeti finkè non ci sono altre linee da leggere
-				riga=sc.nextLine(); /////legge una linea alla volta
-				dati=riga.split(";"); /////divide la ringa in pezzettini con il separatore indicato
-				//System.out.println("Trovato prodotto:\n"+riga);
-				System.out.println("Nome:"+dati[0]);
-				System.out.println("Prezzo:"+dati[1]);
-				System.out.println("Quantità:"+dati[2]);
-		System.out.println("\n");
+		do {
+			System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+			System.out.println("Gestione prodotti\n");
+			System.out.println("1 - visualizza prodotti");
+			System.out.println("2 - carica prodotti");
+			System.out.println("3 - salva prodotti");
+			System.out.println("4 - aggiungi prodotto");
+			System.out.println("\n9 - esci");
+			System.out.print("Inserisci la tua scelta: ");
+			risp=sc.nextLine();
+			switch(risp) {
+			case "1":
+				System.out.println("Elenco prodotti:");
+				for(Prodotto p:n.elencoProdotti())
+				{
+					System.out.println("Prodotto: "+p.getDescrizione());
+					System.out.println(" Prezzo: "+p.getPrezzo());
+					System.out.println(" Quantità: "+p.getQuantità()+"\n");
+				}
+				// n.elencoProdotti=null;   //non si può fare!!!
+				
+				break;
+			case "2":
+				n.carica("prodotti.csv");
+				break;
+			case "3":
+				n.salva("prodotti.csv");
+				break;
+			case "4":
+				Prodotto nuovoProd=new Prodotto();
+				System.out.print("Inserisci la descrizione: ");
+				nuovoProd.setDescrizione(sc.nextLine());
+				System.out.print("Inserisci il prezzo: ");
+				nuovoProd.setPrezzo(Double.parseDouble(sc.nextLine()));
+				System.out.print("Inserisci la quantità: ");
+				nuovoProd.setQuantità(Integer.parseInt(sc.nextLine()));
+				n.aggiungiProdotto(nuovoProd);
+				break;
+			case "9":
+				System.out.println("Arrivederci!");
+				break;
+			default:
+				System.out.println("Scelta non valida!");
 			}
-			sc.close(); ////chiude il file
-			System.out.println("\n\nLettura terminata!!!");
-		} catch (FileNotFoundException e) 
-		{System.out.println("Si è verificato un errore in fase di lettura!"); ///il file legge una riga alla volta
-			e.printStackTrace();
-		}
-		
+			System.out.println("Premi Enter per continuare...");
+			sc.nextLine();
+		} while (!risp.equals("9"));
+			
 	}
+
 }
